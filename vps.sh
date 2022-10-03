@@ -55,7 +55,17 @@ check_sys() {
 install_tools() {
     apt update && apt upgrade -y
     apt install -y vim git zsh
-    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions   "
+
+    # config vim
+    mkdir -p ~/.vim/pack/git-plugins/start
+
+    git clone --depth 1 https://github.com/dense-analysis/ale.git ~/.vim/pack/git-plugins/start/ale
+    git clone https://github.com/pedrohdz/vim-yaml-folds.git ~/.vim/plugged/vim-yaml-folds
+    git clone https://github.com/Yggdroot/indentLine.git ~/.vim/pack/vendor/start/indentLine
+    git clone https://github.com/NLKNguyen/papercolor-theme.git ~/.vim/pack/colors/start/papercolor-theme
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 }
 
