@@ -55,7 +55,8 @@ check_sys() {
 install_tools() {
     apt update && apt upgrade -y
     apt install -y vim git zsh
-    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions   "
+
 }
 
 
