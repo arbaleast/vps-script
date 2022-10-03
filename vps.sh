@@ -73,6 +73,9 @@ install_tools() {
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
     wget -O .zshrc https://cdn.staticaly.com/gh/arbaleast/vps-script/main/.zshrc
+
+    chsh -s /usr/bin/zsh
+
 }
 
 
