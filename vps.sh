@@ -57,8 +57,6 @@ install_tools() {
     apt install -y vim git zsh
 
     # config vim
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
     mkdir -p ~/.vim/pack/git-plugins/start
 
     git clone --depth 1 https://github.com/dense-analysis/ale.git ~/.vim/pack/git-plugins/start/ale
@@ -69,7 +67,12 @@ install_tools() {
 
     curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-    wget https://cdn.staticaly.com/gh/arbaleast/vps-script/main/.vimrc 
+    wget -O .vimrc https://cdn.staticaly.com/gh/arbaleast/vps-script/main/.vimrc
+
+    # zsh
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+    wget -O .zshrc https://cdn.staticaly.com/gh/arbaleast/vps-script/main/.zshrc
 }
 
 
