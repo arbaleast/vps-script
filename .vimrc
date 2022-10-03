@@ -2,6 +2,8 @@
 syntax enable
 " 允许用指定语法高亮配色方案替换默认方案
 syntax on
+"中文编码
+set encoding=utf-8
 
 " 自适应不同语言的智能缩进
 filetype indent on
