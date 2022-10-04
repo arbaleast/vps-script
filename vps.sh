@@ -99,9 +99,9 @@ install_docker() {
 
 install_warp_manager() {
     wget -N https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh 
-    mv menu.sh /usr/bin/menu && chmod +x /usr/bin/menu
+    chmod +x menu.sh && bash menu.sh
     
-    echo "now you can use" ${Green_font_prefix}menu${Font_color_suffix} "to manage network"
+    echo "now you can use" ${Green_font_prefix}warp${Font_color_suffix} "to manage network"
 }
 
 # dashboard
