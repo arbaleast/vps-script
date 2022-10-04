@@ -81,28 +81,6 @@ install_tools() {
     apt install wget curl ca-certificates
     wget -N git.io/aria2.sh && chmod +x aria2.sh
     mv aria2.sh /usr/bin/atm
-
-    # rclone
-    curl https://rclone.org/install.sh | sudo bash
-
-    touch /etc/systemd/system/rclone.service
-    cat  /etc/systemd/system/rclone.service <<EOF
-    [Unit]
-    Description=Rclone
-    After=network-online.target
-
-    [Service]
-    Type=simple
-    ExecStart=$(command -v rclone) ${command}
-    Restart=on-abort
-    User=root
-
-    [Install]
-    WantedBy=default.target
-EOF
-    systemctl start rclone
-    systemctl enable rclone
-
 }
 
 version_manager() {
@@ -110,7 +88,19 @@ version_manager() {
     curl -fsSL https://fnm.vercel.app/install | bash
 }
 
+install_docker() {
+    sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    sudo apt install docker-ce docker-ce-cli containerd.io
 
+    pip install docker-compose
+}
+
+install_warp_manager() {
+    wget -N https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh 
+    mv menu.sh /usr/bin/menu
+}
 
 # dashboard
 #######################################################################
@@ -122,13 +112,19 @@ echo && echo -e " vps auto installer ${Red_font_prefix}[v${sh_ver}]${Font_color_
 
 
  ######
- read -e -p " Please input number [0]:" num
+ read -e -p " Please input number [0-2]:" num
  case "$num" in
 0)
     install_tools
     ;;
-0)
+1)
     version_manager
+    ;;
+2)
+    install_docker
+    ;;
+3)
+    install_warp_manager
     ;;
 *)
     echo
