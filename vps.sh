@@ -99,7 +99,9 @@ install_docker() {
 
 install_warp_manager() {
     wget -N https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh 
-    mv menu.sh /usr/bin/menu
+    mv menu.sh /usr/bin/menu && chmod +x /usr/bin/menu
+    
+    echo "now you can use" ${Green_font_prefix}menu${Font_color_suffix} "to manage network"
 }
 
 # dashboard
@@ -115,7 +117,7 @@ ${Green_font_prefix} 3.${Font_color_suffix} install warp_manager
 
 
  ######
- read -e -p " Please input number [0-2]:" num
+ read -e -p " Please input number [0-3]:" num
  case "$num" in
 0)
     install_tools
