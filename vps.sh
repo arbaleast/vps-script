@@ -54,7 +54,9 @@ check_sys() {
 
 install_tools() {
     apt update && apt upgrade -y
-    apt install -y vim git zsh
+    apt install -y vim git zsh language-pack-zh-hans curl socat
+
+    echo "LANG="zh_CN.UTF-8"" >> /etc/profile
 
     # config vim
     mkdir -p ~/.vim/pack/git-plugins/start
@@ -81,6 +83,9 @@ install_tools() {
     apt install wget curl ca-certificates
     wget -N git.io/aria2.sh && chmod +x aria2.sh
     mv aria2.sh /usr/bin/atm
+
+
+    bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
 }
 
 version_manager() {
