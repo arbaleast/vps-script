@@ -107,7 +107,10 @@ install_warp_manager() {
 
 echo && echo -e " vps auto installer ${Red_font_prefix}[v${sh_ver}]${Font_color_suffix} 
  
- ${Green_font_prefix} 0.${Font_color_suffix} install tools
+${Green_font_prefix} 0.${Font_color_suffix} install tools
+${Green_font_prefix} 1.${Font_color_suffix} version manager
+${Green_font_prefix} 2.${Font_color_suffix} install docker
+${Green_font_prefix} 3.${Font_color_suffix} install warp_manager
  ———————————————————————" && echo
 
 
