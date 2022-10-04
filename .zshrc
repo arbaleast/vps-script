@@ -114,13 +114,3 @@ export GOPROXY=https://proxy.golang.com.cn,direct
 export GOPRIVATE=git.mycompany.com,github.com/my/private
 
 export PATH="/home/ubuntu/.local/bin:$PATH"
-
-# fnm
-export PATH=/home/ubuntu/.fnm:$PATH
-eval "`fnm env`"
-
-# fnm
-export PATH=/home/ubuntu/.fnm:$PATH
-eval "`fnm env`"
-export PATH="$HOME/.jenv/bin:$PATH"
-eval "$(jenv init -)"

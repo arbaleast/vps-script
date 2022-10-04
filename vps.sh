@@ -76,6 +76,38 @@ install_tools() {
 
     chsh -s /usr/bin/zsh
 
+    # aria2, rclone 
+    # use atm to deploy aria2 ref:https://github.com/P3TERX/aria2.sh
+    apt install wget curl ca-certificates
+    wget -N git.io/aria2.sh && chmod +x aria2.sh
+    mv aria2.sh /usr/bin/atm
+
+    # rclone
+    curl https://rclone.org/install.sh | sudo bash
+
+    touch /etc/systemd/system/rclone.service
+    cat  /etc/systemd/system/rclone.service <<EOF
+    [Unit]
+    Description=Rclone
+    After=network-online.target
+
+    [Service]
+    Type=simple
+    ExecStart=$(command -v rclone) ${command}
+    Restart=on-abort
+    User=root
+
+    [Install]
+    WantedBy=default.target
+EOF
+    systemctl start rclone
+    systemctl enable rclone
+
+}
+
+version_manager() {
+    # fnm
+    curl -fsSL https://fnm.vercel.app/install | bash
 }
 
 
@@ -94,6 +126,9 @@ echo && echo -e " vps auto installer ${Red_font_prefix}[v${sh_ver}]${Font_color_
  case "$num" in
 0)
     install_tools
+    ;;
+0)
+    version_manager
     ;;
 *)
     echo
