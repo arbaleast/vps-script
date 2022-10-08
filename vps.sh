@@ -71,15 +71,8 @@ install_tools() {
 
     curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-    wget -O .vimrc https://cdn.staticaly.com/gh/arbaleast/vps-script/main/.vimrc
-
     # zsh
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-    wget -O .zshrc https://cdn.staticaly.com/gh/arbaleast/vps-script/main/.zshrc
-
-    chsh -s /usr/bin/zsh
-    source /root/.zshrc
 
     # aria2, rclone 
     # use atm to deploy aria2 ref:https://github.com/P3TERX/aria2.sh
@@ -94,6 +87,14 @@ install_tools() {
 version_manager() {
     # fnm
     curl -fsSL https://fnm.vercel.app/install | bash
+}
+
+get_config() {
+    wget -O .vimrc https://cdn.staticaly.com/gh/arbaleast/vps-script/main/.vimrc
+    wget -O .zshrc https://cdn.staticaly.com/gh/arbaleast/vps-script/main/.zshrc
+
+    chsh -s /usr/bin/zsh
+    source /root/.zshrc
 }
 
 install_docker() {
@@ -121,7 +122,8 @@ echo && echo -e " vps auto installer ${Red_font_prefix}[v${sh_ver}]${Font_color_
 ${Green_font_prefix} 0.${Font_color_suffix} install tools
 ${Green_font_prefix} 1.${Font_color_suffix} version manager
 ${Green_font_prefix} 2.${Font_color_suffix} install docker
-${Green_font_prefix} 3.${Font_color_suffix} install warp_manager
+${Green_font_prefix} 3.${Font_color_suffix} get config
+${Green_font_prefix} 4.${Font_color_suffix} install warp_manager
  ———————————————————————" && echo
 
 
@@ -138,6 +140,9 @@ ${Green_font_prefix} 3.${Font_color_suffix} install warp_manager
     install_docker
     ;;
 3)
+    get_config
+    ;;
+4)
     install_warp_manager
     ;;
 *)
