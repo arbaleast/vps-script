@@ -112,7 +112,7 @@ install_warp_manager() {
     chmod +x menu.sh && bash menu.sh
     mv menu.sh /usr/bin/menu
     
-    echo "now you can use" ${Green_font_prefix}warp${Font_color_suffix} "to manage network"
+    echo "now you can use ${Green_font_prefix}warp${Font_color_suffix} to manage network"
 }
 
 # dashboard
