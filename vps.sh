@@ -8,9 +8,9 @@
 # https://github.com/arbaleast/aria2.sh
 # Description: 
 # System Required: CentOS/Debian/Ubuntu
-# Version: 2.7.4
+# Version: 1.0.0
 
-sh_ver="2.7.4"
+sh_ver="1.0.0"
 export PATH=~/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/sbin:/bin
 
 # text color
@@ -54,9 +54,11 @@ check_sys() {
 
 install_tools() {
     apt update && apt upgrade -y
-    apt install -y vim git zsh language-pack-zh-hans curl socat
+    apt install -y vim git zsh language-pack-zh-hans curl socat htop
 
     echo "LANG="zh_CN.UTF-8"" >> /etc/profile
+
+    curl -fsSL "https://alist.nn.ci/v3.sh" | bash -s install
 
     # config vim
     mkdir -p ~/.vim/pack/git-plugins/start
@@ -77,6 +79,7 @@ install_tools() {
     wget -O .zshrc https://cdn.staticaly.com/gh/arbaleast/vps-script/main/.zshrc
 
     chsh -s /usr/bin/zsh
+    source /root/.zshrc
 
     # aria2, rclone 
     # use atm to deploy aria2 ref:https://github.com/P3TERX/aria2.sh
