@@ -41,6 +41,8 @@ check_sys() {
         release="ubuntu"
     elif grep -qi "centos|red hat|redhat" /etc/issue; then
         release="centos"
+    elif  grep -qi "fedora" /etc/os-release; then
+        release="fedora"
     elif  grep -qi "debian" /proc/version; then
         release="debian"
     elif  grep -qi "ubuntu" /proc/version; then
@@ -55,11 +57,12 @@ check_sys() {
 install_tools() {
     read -rp "请输入需要额外安装的工具，并回车确认：" TOOL
     
+    check_sys
     # 检测是哪种类型的linux发行版；暂时区分ubuntu和fedora
-    if [ "$(check_sys)" = "ubuntu" ];then
+    if [ "$release" = "ubuntu" ];then
         sudo apt update && sudo apt upgrade -y
         sudo apt install -y vim git zsh language-pack-zh-hans curl htop "$TOOL"
-    elif [ "$(check_sys)" = "fedora" ];then
+    elif [ "$release" = "fedora" ];then
         sudo dnf update && sudo dnf upgrade -y
         sudo dnf install -y vim git zsh language-pack-zh-hans curl htop screen"$TOOL"  
     echo "LANG=\"zh_CN.UTF-8\"" >> /etc/profile
@@ -79,14 +82,32 @@ install_tools() {
             git clone https://gitclone.com/github.com/pedrohdz/vim-yaml-folds.git ~/.vim/plugged/vim-yaml-folds
             git clone https://gitclone.com/github.com/Yggdroot/indentLine.git ~/.vim/pack/vendor/start/indentLine
             git clone https://gitclone.com/github.com/NLKNguyen/papercolor-theme.git ~/.vim/pack/colors/start/papercolor-theme
-            git clone https://gitclone.com/github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
 
             curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://fastly.jsdelivr.net/gh/junegunn/vim-plug@master/plug.vim
             ;;
         3)
-            # zsh
+            # 安装 ohmhzsh 
             rm -rf ~/.oh-my-zsh
             sh -c "$(curl -fsSL https://fastly.jsdelivr.net/gh/ohmyzsh/ohmyzsh@master/tools/install.sh)"
+
+            # 安装命令补全插件
+            git clone https://gitclone.com/github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
+
+            # zsh配置文件: 添加代理
+            cat > ~/.zshrc << EOF
+            function proxy_on() {
+                export http_proxy=http://127.0.0.1:7890
+                export https_proxy=\$http_proxy
+                echo -e "终端代理已开启。"
+            }
+
+            function proxy_off(){
+                unset http_proxy https_proxy
+                echo -e "终端代理已关闭。"
+            }
+EOF
+            # 让zsh配置生效
+            source ~/.zshrc
             ;;
         4)
             # aria2, rclone 
@@ -110,8 +131,8 @@ version_manager() {
 }
 
 get_config() {
-    wget -O .vimrc https://cdn.staticaly.com/gh/arbaleast/vps-script/main/.vimrc -o ~/.vimrc
-    wget -O .zshrc https://cdn.staticaly.com/gh/arbaleast/vps-script/main/.zshrc -o ~/.zshrc
+    wget -O ~/.vimrc https://cdn.staticaly.com/gh/arbaleast/vps-script/main/.vimrc
+    wget -O ~/.zshrc https://cdn.staticaly.com/gh/arbaleast/vps-script/main/.zshrc
 
     chsh -s /usr/bin/zsh
     source ~/.zshrc
