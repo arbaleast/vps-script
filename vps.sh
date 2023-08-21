@@ -35,54 +35,73 @@ check_root() {
 check_sys() {
     if [[ -f /etc/redhat-release ]]; then
         release="centos"
-    elif cat /etc/issue | grep -q -E -i "debian"; then
+    elif grep -qi "debian" /etc/issue; then
         release="debian"
-    elif cat /etc/issue | grep -q -E -i "ubuntu"; then
+    elif grep -qi "ubuntu" /etc/issue; then
         release="ubuntu"
-    elif cat /etc/issue | grep -q -E -i "centos|red hat|redhat"; then
+    elif grep -qi "centos|red hat|redhat" /etc/issue; then
         release="centos"
-    elif cat /proc/version | grep -q -E -i "debian"; then
+    elif  grep -qi "debian" /proc/version; then
         release="debian"
-    elif cat /proc/version | grep -q -E -i "ubuntu"; then
+    elif  grep -qi "ubuntu" /proc/version; then
         release="ubuntu"
-    elif cat /proc/version | grep -q -E -i "centos|red hat|redhat"; then
+    elif grep -qi "centos|red hat|redhat" /proc/version; then
         release="centos"
     fi
     ARCH=$(uname -m)
-    [ $(command -v dpkg) ] && dpkgARCH=$(dpkg --print-architecture | awk -F- '{ print $NF }')
+    [ "$(command -v dpkg)" ] && dpkgARCH=$(dpkg --print-architecture | awk -F- '{ print $NF }')
 }
 
 install_tools() {
-    apt update && apt upgrade -y
-    apt install -y vim git zsh language-pack-zh-hans curl socat htop
+    read -rp "请输入需要额外安装的工具，并回车确认：" TOOL
+    
+    # 检测是哪种类型的linux发行版；暂时区分ubuntu和fedora
+    if [ "$(check_sys)" = "ubuntu" ];then
+        sudo apt update && sudo apt upgrade -y
+        sudo apt install -y vim git zsh language-pack-zh-hans curl htop "$TOOL"
+    elif [ "$(check_sys)" = "fedora" ];then
+        sudo dnf update && sudo dnf upgrade -y
+        sudo dnf install -y vim git zsh language-pack-zh-hans curl htop screen"$TOOL"  
+    echo "LANG=\"zh_CN.UTF-8\"" >> /etc/profile
+    fi
 
-    echo "LANG="zh_CN.UTF-8"" >> /etc/profile
+    read -p "请输入需要配置的环境, 可选: 1: alist, 2: vim, 3: zsh, 4: aria2;rclone: \n" RUNTIME
 
-    curl -fsSL "https://alist.nn.ci/v3.sh" | bash -s install
+    case $RUNTIME in 
+        1)
+            curl -fsSL "https://alist.nn.ci/v3.sh" | bash -s install
+            ;;
+        2)
+            # config vim
+            mkdir -p ~/.vim/pack/git-plugins/start
 
-    # config vim
-    mkdir -p ~/.vim/pack/git-plugins/start
+            git clone --depth 1 https://gitclone.com/github.com/dense-analysis/ale.git ~/.vim/pack/git-plugins/start/ale
+            git clone https://gitclone.com/github.com/pedrohdz/vim-yaml-folds.git ~/.vim/plugged/vim-yaml-folds
+            git clone https://gitclone.com/github.com/Yggdroot/indentLine.git ~/.vim/pack/vendor/start/indentLine
+            git clone https://gitclone.com/github.com/NLKNguyen/papercolor-theme.git ~/.vim/pack/colors/start/papercolor-theme
+            git clone https://gitclone.com/github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
 
-    git clone --depth 1 https://github.com/dense-analysis/ale.git ~/.vim/pack/git-plugins/start/ale
-    git clone https://github.com/pedrohdz/vim-yaml-folds.git ~/.vim/plugged/vim-yaml-folds
-    git clone https://github.com/Yggdroot/indentLine.git ~/.vim/pack/vendor/start/indentLine
-    git clone https://github.com/NLKNguyen/papercolor-theme.git ~/.vim/pack/colors/start/papercolor-theme
-    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+            curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://fastly.jsdelivr.net/gh/junegunn/vim-plug@master/plug.vim
+            ;;
+        3)
+            # zsh
+            rm -rf ~/.oh-my-zsh
+            sh -c "$(curl -fsSL https://fastly.jsdelivr.net/gh/ohmyzsh/ohmyzsh@master/tools/install.sh)"
+            ;;
+        4)
+            # aria2, rclone 
+            # use atm to deploy aria2 ref:https://github.com/P3TERX/aria2.sh
+            apt install wget curl ca-certificates
+            wget -N git.io/aria2.sh && chmod +x aria2.sh
+            mv aria2.sh /usr/bin/atm
+            ;;
+        *)
+            install_tools
+            ;;
 
-    curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        # bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
+    esac
 
-    # zsh
-    rm -rf ~/.oh-my-zsh
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-    # aria2, rclone 
-    # use atm to deploy aria2 ref:https://github.com/P3TERX/aria2.sh
-    apt install wget curl ca-certificates
-    wget -N git.io/aria2.sh && chmod +x aria2.sh
-    mv aria2.sh /usr/bin/atm
-
-
-    bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
 }
 
 version_manager() {
@@ -91,11 +110,11 @@ version_manager() {
 }
 
 get_config() {
-    wget -O .vimrc https://cdn.staticaly.com/gh/arbaleast/vps-script/main/.vimrc
-    wget -O .zshrc https://cdn.staticaly.com/gh/arbaleast/vps-script/main/.zshrc
+    wget -O .vimrc https://cdn.staticaly.com/gh/arbaleast/vps-script/main/.vimrc -o ~/.vimrc
+    wget -O .zshrc https://cdn.staticaly.com/gh/arbaleast/vps-script/main/.zshrc -o ~/.zshrc
 
     chsh -s /usr/bin/zsh
-    source /root/.zshrc
+    source ~/.zshrc
 }
 
 install_docker() {
@@ -129,7 +148,7 @@ ${Green_font_prefix} 4.${Font_color_suffix} install warp_manager
 
 
  ######
- read -e -p " Please input number [0-3]:" num
+ read -erp " Please input number [0-3]:" num
  case "$num" in
 0)
     install_tools
