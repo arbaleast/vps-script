@@ -64,7 +64,7 @@ install_tools() {
     #     sudo apt install -y vim git zsh language-pack-zh-hans curl htop "$TOOL"
     # elif [ "$release" = "fedora" ];then
         sudo dnf update && sudo dnf upgrade -y
-        sudo dnf install -y vim git zsh language-pack-zh-hans curl htop screen"$TOOL"  
+        sudo dnf install -y vim git zsh curl htop screen"$TOOL"  
     echo "LANG=\"zh_CN.UTF-8\"" >> /etc/profile
     # fi
 
@@ -91,10 +91,10 @@ install_tools() {
             sh -c "$(curl -fsSL https://fastly.jsdelivr.net/gh/ohmyzsh/ohmyzsh@master/tools/install.sh)"
 
             # 安装命令补全插件
-            git clone https://gitclone.com/github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
+            git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
             # zsh配置文件: 添加代理
-            cat > ~/.zshrc << EOF
+            cat >> ~/.zshrc << EOF
             function proxy_on() {
                 export http_proxy=http://127.0.0.1:7890
                 export https_proxy=\$http_proxy
@@ -169,7 +169,7 @@ ${Green_font_prefix} 4.${Font_color_suffix} install warp_manager
 
 
  ######
- read -erp " Please input number [0-3]:" num
+ read -erp " Please input number [0-4]:" num
  case "$num" in
 0)
     install_tools
