@@ -59,14 +59,14 @@ install_tools() {
     
     check_sys
     # 检测是哪种类型的linux发行版；暂时区分ubuntu和fedora
-    # if [ "$release" = "ubuntu" ];then
-    #     sudo apt update && sudo apt upgrade -y
-    #     sudo apt install -y vim git zsh language-pack-zh-hans curl htop "$TOOL"
-    # elif [ "$release" = "fedora" ];then
+    if [ "$release" = "ubuntu" ];then
+        sudo apt update && sudo apt upgrade -y
+        sudo apt install -y vim git zsh language-pack-zh-hans curl htop "$TOOL"
+    elif [ "$release" = "fedora" ];then
         sudo dnf update && sudo dnf upgrade -y
         sudo dnf install -y vim git zsh curl htop screen "$TOOL"  
-    echo "LANG=\"zh_CN.UTF-8\"" >> /etc/profile
-    # fi
+        echo "LANG=\"zh_CN.UTF-8\"" >> /etc/profile
+    fi
 
     read -p "请输入需要配置的环境, 可选: 1: alist, 2: vim, 3: zsh, 4: aria2;rclone: \x0a" RUNTIME
 
